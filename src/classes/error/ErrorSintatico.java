@@ -13,11 +13,11 @@ public class ErrorSintatico extends Error {
         return "Erro " + getCodigo() + ": " + getDescricao() + "  em " + getNomeArquivo() + ":" + getNumLinha();
     }
 
-    public void setErrorSintatico (int codigo,String lexema,String nomeArquivo,int nLine)
+    public void setErrorSintatico (int codigo,String msg,String lexema,String nomeArquivo,int nLine)
     {
         Error erroSintatico = new ErrorSintatico();
         erroSintatico.setCodigo(codigo);
-        erroSintatico.setDescricao("Identificador nao esperado: " + lexema);
+        erroSintatico.setDescricao(msg +": " + lexema);
         erroSintatico.setNomeArquivo(nomeArquivo);
         erroSintatico.setNumLinha(nLine);
         Error.addErro(erroSintatico);

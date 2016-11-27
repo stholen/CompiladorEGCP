@@ -21,6 +21,7 @@ public class AnalisadorLexicoReurn
     private String real;
     private String logico;
     private String character;
+    private String string;
     private String identificador;
     private String literais;
     private String palavra = "";
@@ -41,10 +42,12 @@ public class AnalisadorLexicoReurn
             int i = 10; 
             this.nomeArquivo = pathFile;
             inteiro = ("^\\d+");
-            character = ("\\d{1}");
+            character = ("[a-zA-Z]{1}");
+            string = ("[a-zA-Z]");
             real = ("^\\d+\\.\\d+");
             identificador = ("^[a-z]+\\w+[_w]*|^_[a-z]+\\w+[_w]*|^[a-z]\\w?$");
             literais = ("^\".*\"$");
+            logico  =   ("false | true");
             delimitadores.add(" ");
             delimitadores.add(",");
             delimitadores.add(";");
@@ -83,17 +86,20 @@ public class AnalisadorLexicoReurn
             operAtribuicao.add("++");
             operAtribuicao.add("--");
 
-            reservadas.add("programa");
-            reservadas.add("inicio");
-            reservadas.add("se");
-            reservadas.add("entao");
-            reservadas.add("senao");
-            reservadas.add("escreva");
-            reservadas.add("leia");
-            reservadas.add("enquanto");
-            reservadas.add("caractere");
-            reservadas.add("real");
-            reservadas.add("inteiro");
+            reservadas.add("INICIO");
+            reservadas.add("FIM");
+            reservadas.add("SE");
+            reservadas.add("ENTAO");
+            reservadas.add("SENAO");
+            reservadas.add("ESCREVA");
+            reservadas.add("LEIA");
+            reservadas.add("ENQUANTO");
+            reservadas.add("CHARACTERE");
+            reservadas.add("REAL");
+            reservadas.add("INTEIRO");
+            reservadas.add("LOGICO");
+            reservadas.add("STRING");
+
 
             codigoFonte = new BufferedReader(new FileReader(pathFile));
         }
@@ -169,7 +175,7 @@ public class AnalisadorLexicoReurn
         if (palavra.matches(inteiro))
         {
             Elemento elemento = new Elemento();
-            elemento.setToken("INTEIRO");
+            elemento.setToken("T_INTEIRO");
             elemento.setLexema(palavra);
             elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
@@ -178,7 +184,7 @@ public class AnalisadorLexicoReurn
         if (palavra.matches(real))
         {
             Elemento elemento = new Elemento();
-            elemento.setToken("REAL");
+            elemento.setToken("T_REAL");
             elemento.setLexema(palavra);
             elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
@@ -187,7 +193,7 @@ public class AnalisadorLexicoReurn
         if (palavra.matches(character))
         {
             Elemento elemento = new Elemento();
-            elemento.setToken("CHARACTER");
+            elemento.setToken("T_CHARACTER");
             elemento.setLexema(palavra);
             elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
@@ -197,7 +203,25 @@ public class AnalisadorLexicoReurn
         if (palavra.matches(literais))
         {
             Elemento elemento = new Elemento();
-            elemento.setToken("LITERAL");
+            elemento.setToken("T_LITERAL");
+            elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
+            tokens.add(elemento);
+            return;
+        }
+        if(palavra.matches(string))
+        {
+            Elemento elemento = new Elemento();
+            elemento.setToken("T_STRING");
+            elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
+            tokens.add(elemento);
+            return;
+        }
+        if(palavra.matches(logico))
+        {
+            Elemento elemento = new Elemento();
+            elemento.setToken("T_LOGICO");
             elemento.setLexema(palavra);
             elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
@@ -226,6 +250,15 @@ public class AnalisadorLexicoReurn
         {
             Elemento elemento = new Elemento();
             elemento.setToken("MULOP");
+            elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
+            tokens.add(elemento);
+            return;
+        }
+        if(delimitadores.contains(palavra))
+        {
+            Elemento elemento = new Elemento();
+            elemento.setToken("DELIMITADOR");
             elemento.setLexema(palavra);
             elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
@@ -270,7 +303,6 @@ public class AnalisadorLexicoReurn
 
         ErrorLexico erro = new ErrorLexico();
         erro.setErrorLexico(101,palavra,this.nomeArquivo,nLine);
-        erro.setCodigo(101);
         Error.addErro(erro);
     }
     
