@@ -1,14 +1,16 @@
 package classes;
-import classes.error.ErrorLexico;
+
 import classes.error.Error;
+import classes.error.ErrorLexico;
 import classes.tabelaDeSimbolos.Simbolos;
+
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public class AnalisadorLexico
 {
@@ -19,6 +21,7 @@ public class AnalisadorLexico
     private String real;
     private String logico;
     private String character;
+    private String string;
     private String identificador;
     private String literais;
     private String palavra = "";
@@ -36,13 +39,15 @@ public class AnalisadorLexico
     {
         try
         {
-            int i = 10; 
+            int i = 10;
             this.nomeArquivo = pathFile;
             inteiro = ("^\\d+");
-            character = ("\\d{1}");
+            character = ("[a-zA-Z]{1}");
+            string = ("[a-zA-Z]");
             real = ("^\\d+\\.\\d+");
             identificador = ("^[a-z]+\\w+[_w]*|^_[a-z]+\\w+[_w]*|^[a-z]\\w?$");
             literais = ("^\".*\"$");
+            logico  =   ("false | true");
             delimitadores.add(" ");
             delimitadores.add(",");
             delimitadores.add(";");
@@ -54,7 +59,7 @@ public class AnalisadorLexico
             delimitadores.add("\\t");
             delimitadores.add("{");
             delimitadores.add("}");
-            
+
             RELOP.add("==");
             RELOP.add("!=");
             RELOP.add(">=");
@@ -81,24 +86,19 @@ public class AnalisadorLexico
             operAtribuicao.add("++");
             operAtribuicao.add("--");
 
-            reservadas.add("programa");
-            reservadas.add("inicio");
-            reservadas.add("identificador");
-            reservadas.add("declaracoes");
-            reservadas.add("declaracao");
-            reservadas.add("identificadores");
-            reservadas.add("identificador");
-            reservadas.add("instrucoes");
-            reservadas.add("instrucao");
-            reservadas.add("se");
-            reservadas.add("entao");
-            reservadas.add("senao");
-            reservadas.add("escreva");
-            reservadas.add("leia");
-            reservadas.add("enquanto");
-            reservadas.add("caractere");
-            reservadas.add("real");
-            reservadas.add("inteiro");
+            reservadas.add("INICIO");
+            reservadas.add("FIM");
+            reservadas.add("SE");
+            reservadas.add("ENTAO");
+            reservadas.add("SENAO");
+            reservadas.add("ESCREVA");
+            reservadas.add("LEIA");
+            reservadas.add("ENQUANTO");
+            reservadas.add("CHARACTERE");
+            reservadas.add("REAL");
+            reservadas.add("INTEIRO");
+            reservadas.add("LOGICO");
+            reservadas.add("STRING");
 
 
             codigoFonte = new BufferedReader(new FileReader(pathFile));
@@ -108,7 +108,7 @@ public class AnalisadorLexico
             JOptionPane.showMessageDialog(null, "Arquivo não encontrado");
         }
     }
-    
+
     public void analisar() throws IOException
     {
         int nLine = 0;
@@ -132,25 +132,26 @@ public class AnalisadorLexico
                 caractere = linha.substring(i,i+1);
                 if (delimitadores.contains(caractere))
                 {
-                     if ((!inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
-                        "//")))
-                     {
+                    if ((!inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
+                            "//")))
+                    {
                         palavra = "";
                         break;
-                     }
-                     if ((!inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
-                        "/*")))
-                     {
+                    }
+                    if ((!inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
+                            "/*")))
+                    {
                         palavra = "";
                         inComment = true;
-                     }
-                     if ((inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
-                        "*/")))
-                     {
+                    }
+
+                    if ((inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
+                            "*/")))
+                    {
                         palavra = "";
                         inComment = false;
-                     }
-                     
+                    }
+
                     if (!inComment)
                     {
                         if ((!palavra.equals("")) && (!palavra.contains("/*")))
@@ -159,13 +160,13 @@ public class AnalisadorLexico
                         }
                         //alinhar o token correspondente
                     }
-                        palavra = "";
-                    
+                    palavra = "";
+
                 }
                 else
                     palavra = palavra + caractere;
             }
-            
+
         }
     }
 
@@ -174,42 +175,65 @@ public class AnalisadorLexico
         if (palavra.matches(inteiro))
         {
             Elemento elemento = new Elemento();
-            elemento.setToken("INTEIRO");
+            elemento.setToken("T_INTEIRO");
             elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
         if (palavra.matches(real))
         {
             Elemento elemento = new Elemento();
-            elemento.setToken("REAL");
+            elemento.setToken("T_REAL");
             elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
         if (palavra.matches(character))
         {
             Elemento elemento = new Elemento();
-            elemento.setToken("CHARACTER");
+            elemento.setToken("T_CHARACTER");
             elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
-        
+
         if (palavra.matches(literais))
         {
             Elemento elemento = new Elemento();
-            elemento.setToken("LITERAL");
+            elemento.setToken("T_LITERAL");
             elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
-                   
+        if(palavra.matches(string))
+        {
+            Elemento elemento = new Elemento();
+            elemento.setToken("T_STRING");
+            elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
+            tokens.add(elemento);
+            return;
+        }
+        if(palavra.matches(logico))
+        {
+            Elemento elemento = new Elemento();
+            elemento.setToken("T_LOGICO");
+            elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
+            tokens.add(elemento);
+            return;
+        }
+
         if (RELOP.contains(palavra))
         {
             Elemento elemento = new Elemento();
             elemento.setToken("RELOP");
             elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
@@ -218,6 +242,7 @@ public class AnalisadorLexico
             Elemento elemento = new Elemento();
             elemento.setToken("ADDOP");
             elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
@@ -226,14 +251,25 @@ public class AnalisadorLexico
             Elemento elemento = new Elemento();
             elemento.setToken("MULOP");
             elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
-        
+        if(delimitadores.contains(palavra))
+        {
+            Elemento elemento = new Elemento();
+            elemento.setToken("DELIMITADOR");
+            elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
+            tokens.add(elemento);
+            return;
+        }
+
         if (reservadas.contains(palavra))
         {
             Elemento elemento = new Elemento();
             elemento.setToken(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
@@ -242,6 +278,7 @@ public class AnalisadorLexico
             Elemento elemento = new Elemento();
             elemento.setToken("ATRIBUICAO");
             elemento.setLexema(palavra);
+            elemento.setNomeArquivo(this.nomeArquivo);
             tokens.add(elemento);
             return;
         }
@@ -252,15 +289,16 @@ public class AnalisadorLexico
                 Elemento elemento = new Elemento();
                 elemento.setToken("IDENTIFICADOR");
                 elemento.setLexema(palavra);
+                elemento.setNomeArquivo(this.nomeArquivo);
                 tokens.add(elemento);
                 Simbolos simbolo = new Simbolos();
                 simbolo.setNome(palavra);
                 Simbolos.addSimbolo(simbolo);
                 return;
             }
-            
+
+
         }
-        
 
         Error erro = new ErrorLexico();
         erro.setCodigo(101);
@@ -268,11 +306,8 @@ public class AnalisadorLexico
         erro.setNomeArquivo(this.nomeArquivo);
         erro.setNumLinha(nLine);
         Error.addErro(erro);
-            
     }
-    
-    
-    
+
     public List<Elemento> getTokens(){
         return tokens;
     }
