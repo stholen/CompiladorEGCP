@@ -86,19 +86,18 @@ public class AnalisadorLexico
             operAtribuicao.add("++");
             operAtribuicao.add("--");
 
-            reservadas.add("INICIO");
-            reservadas.add("FIM");
-            reservadas.add("SE");
-            reservadas.add("ENTAO");
-            reservadas.add("SENAO");
-            reservadas.add("ESCREVA");
-            reservadas.add("LEIA");
-            reservadas.add("ENQUANTO");
-            reservadas.add("CHARACTERE");
-            reservadas.add("REAL");
-            reservadas.add("INTEIRO");
-            reservadas.add("LOGICO");
-            reservadas.add("STRING");
+            reservadas.add("inicio");
+            reservadas.add("fim");
+            reservadas.add("se");
+            reservadas.add("escreva");
+            reservadas.add("senao");
+            reservadas.add("leia");
+            reservadas.add("enquanto");
+            reservadas.add("charactere");
+            reservadas.add("real");
+            reservadas.add("inteiro");
+            reservadas.add("logico");
+            reservadas.add("string");
 
 
             codigoFonte = new BufferedReader(new FileReader(pathFile));
@@ -127,40 +126,42 @@ public class AnalisadorLexico
             linha = linha.split("\r")[0];
             caractere = "";
 
-            for (int i = 0; i < size;i++)
-            {
+            for (int i = 0; i < size;i++){
                 caractere = linha.substring(i,i+1);
-                if (delimitadores.contains(caractere))
-                {
+                if (delimitadores.contains(caractere)){
                     if ((!inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
-                            "//")))
-                    {
+                            "//"))){
                         palavra = "";
                         break;
                     }
                     if ((!inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
-                            "/*")))
-                    {
+                            "/*"))){
                         palavra = "";
                         inComment = true;
                     }
-
                     if ((inComment) && (palavra.length() >= 2) && (palavra.substring(0,2).equals(
-                            "*/")))
-                    {
+                            "*/"))){
                         palavra = "";
                         inComment = false;
                     }
 
-                    if (!inComment)
-                    {
+                    if (!inComment){
                         if ((!palavra.equals("")) && (!palavra.contains("/*")))
-                        {
-                            this.addToken(palavra, nLine);
-                        }
+                            if(!caractere.equals(" ") || !caractere.equals("\\n") || !caractere.equals("\\r") || !caractere.equals("\\t"))
+                            {
+                                this.addToken(palavra,nLine);
+                                this.addToken(caractere,nLine);
+                            }
+                            else
+                            {
+                                this.addToken(palavra,nLine);
+                            }
+
                         //alinhar o token correspondente
                     }
                     palavra = "";
+
+
 
                 }
                 else

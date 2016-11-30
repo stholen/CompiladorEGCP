@@ -26,22 +26,22 @@ public class Main {
 
         }
 
-        AnalisadorSintatico sintatico = new AnalisadorSintatico(caminhoArquivo);
-        sintatico.analisar();
+//        AnalisadorSintatico sintatico = new AnalisadorSintatico(caminhoArquivo);
+//        sintatico.analisar();
 
-//AnalisadorLexico analisador = new AnalisadorLexico(caminhoArquivo);
-//        try{analisador.analisar();
-//            System.out.println("Pares <token,lexema> \n"+ analisador.getTokens());
-//            System.out.println("\n\nLista de erros léxicos");
-//            int i;
-//            for (i = 0; i < Error.getErros().size();i++){
-//                Error erro = Error.getErros().get(i);
-//                System.out.println(erro.showErrors());
-//            }
-//            System.out.println("\n\nTabela de símbolos\n" + Simbolos.getTabelaDeSimbolos());
-//
-//        } catch (IOException ex) {
-//            JOptionPane.showMessageDialog(null, "Falha ao ler o arquivo.");
-//        }
+AnalisadorLexico analisador = new AnalisadorLexico(caminhoArquivo);
+        try{analisador.analisar();
+            System.out.println("Pares <token,lexema> \n"+ analisador.getTokens());
+            System.out.println("\n\nLista de erros léxicos");
+            int i;
+            for (i = 0; i < Error.getErros().size();i++){
+                Error erro = Error.getErros().get(i);
+                System.out.println(erro.showErrors());
+            }
+            System.out.println("\n\nTabela de símbolos\n" + Simbolos.getTabelaDeSimbolos());
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Falha ao ler o arquivo.");
+        }
     }
 }
