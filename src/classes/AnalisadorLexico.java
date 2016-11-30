@@ -147,7 +147,7 @@ public class AnalisadorLexico
 
                     if (!inComment){
                         if ((!palavra.equals("")) && (!palavra.contains("/*")))
-                            if(!caractere.equals(" ") || !caractere.equals("\\n") || !caractere.equals("\\r") || !caractere.equals("\\t"))
+                            if((!caractere.equals(" ")) && (!caractere.equals("\\n")) && (!caractere.equals("\\r")) && (!caractere.equals("\\t")))
                             {
                                 this.addToken(palavra,nLine);
                                 this.addToken(caractere,nLine);

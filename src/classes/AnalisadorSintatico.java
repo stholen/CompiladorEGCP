@@ -1,14 +1,9 @@
 package classes;
 
 import classes.error.Error;
-import classes.error.ErrorLexico;
-import classes.error.ErrorSintatico;
-
 import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,39 +43,42 @@ public class AnalisadorSintatico
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Falha ao ler o arquivo.");
         }
-//        int i = 1;
-//        while (i <= lexico.getTokens().size())
-//        {
-//            if(lexico.getTokens().get(i++).getToken().equals("INICIO"))
-//            {
-//                if(lexico.getTokens().get(i++).getToken().equals("IDENTIFICADOR"))
-//                {
-//                    if (lexico.getTokens().get(i++).getLexema().equals(";"))
-//                    {
-//                        if(lexico.getTokens().get(i).getLexema().equals("FIM"))
-//                        {
-//                            System.out.println("Compilado!");
-//                        }
-//                        else
-//                        {
-//                            System.out.println("Identificador 'FIM' esperado");
-//                        }
-//                    }
-//                    else
-//                    {
-//                        System.out.println("';' esperado. Linha "+lexico.getTokens().get(i).getnLinha() );
-//                    }
-//                }
-//                else
-//                {
-//                    System.out.println("Identificador esperado. Linha "+lexico.getTokens().get(i).getnLinha());
-//                }
-//            }
-//            else
-//            {
-//                System.out.println("Palavra reservada 'INICIO' esperada. Linha"+lexico.getTokens().get(i).getnLinha());
-//            }
-//        }
+        int i = 1;
+        while (i <= lexico.getTokens().size())
+        {
+            if(lexico.getTokens().get(i++).getToken().equals("inicio"))
+            {
+                if(lexico.getTokens().get(i++).getToken().equals("IDENTIFICADOR"))
+                {
+                    if (lexico.getTokens().get(i++).getLexema().equals(";"))
+                    {
+
+                        //FUNÇOES DE VALIDAÇAO DE QUALQUER OCORRENCIA ENTRE OS 3 PRIMEIROS FATORES E O ULTIMO
+                        
+                        if(lexico.getTokens().get(i).getLexema().equals("FIM"))
+                        {
+                            System.out.println("Compilado!");
+                        }
+                        else
+                        {
+                            System.out.println("Identificador 'FIM' esperado");
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("';' esperado. Linha "+lexico.getTokens().get(i).getnLinha() );
+                    }
+                }
+                else
+                {
+                    System.out.println("Identificador esperado. Linha "+lexico.getTokens().get(i).getnLinha());
+                }
+            }
+            else
+            {
+                System.out.println("Palavra reservada 'INICIO' esperada. Linha"+lexico.getTokens().get(i).getnLinha());
+            }
+        }
 
     }
 }
